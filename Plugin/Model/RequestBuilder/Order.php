@@ -1,6 +1,6 @@
 <?php
 
-namespace Forter\Override\Plugin\Model\RequestBuilder;
+namespace Forter\Checkoutcom\Plugin\Model\RequestBuilder;
 
 use CheckoutCom\Magento2\Model\ResourceModel\WebhookEntity\Collection as checkoutComCollection;
 use Forter\Forter\Model\AbstractApi;
