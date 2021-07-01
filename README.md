@@ -3,7 +3,7 @@
 ---
 
 The extension is build in order to provide example for merchents on how to override there extension.
-This extension allows for compatibility with Checkout.com while using the Forter [Fault Detection Module](https://github.com/forter/forter-magento2)
+This extension allows for compatibility with Checkout.com while using the Forter [Fraud Detection Module](https://github.com/forter/forter-magento2)
 
 ## Install manually under app/code
 Download & place the contents of this repository under {YOUR-MAGENTO2-ROOT-DIR}/app/code/Forter/Checkoutcom
