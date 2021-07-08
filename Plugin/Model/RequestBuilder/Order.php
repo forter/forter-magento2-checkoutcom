@@ -66,31 +66,58 @@ class Order
             $paymentCheckoutCom = $collection->getLastItem();
             $paymentCheckoutCom = $paymentCheckoutCom->getEventData();
             $paymentCheckoutCom = json_decode($paymentCheckoutCom, true);
-            $expiryMonth = strval($paymentCheckoutCom['data']['source']['expiry_month']);
-            $result['payment'][0]['creditCard'] = [
-                                      "nameOnCard" => $paymentCheckoutCom['data']['source']['name'] ? $paymentCheckoutCom['data']['source']['name'] : "",
-                                      "cardBrand" => $paymentCheckoutCom['data']['source']['scheme'] ? $paymentCheckoutCom['data']['source']['scheme'] : "",
-                                      "bin" => $paymentCheckoutCom['data']['source']['bin'] ? $paymentCheckoutCom['data']['source']['bin'] : "",
-                                      "countryOfIssuance" => $paymentCheckoutCom['data']['source']['issuer_country'] ? $paymentCheckoutCom['data']['source']['issuer_country'] : "",
-                                      "cardBank" => $paymentCheckoutCom['data']['source']['issuer'] ? $paymentCheckoutCom['data']['source']['issuer'] : "",
-                                      "verificationResults" => [
-                                        "cvvResult" => $paymentCheckoutCom['data']['source']['cvv_check'] ? $paymentCheckoutCom['data']['source']['cvv_check'] : "",
-                                        "authorizationCode" => $paymentCheckoutCom['data']['auth_code'] ? $paymentCheckoutCom['data']['auth_code'] : "",
-                                        "processorResponseCode" => $paymentCheckoutCom['data']['response_code'] ? $paymentCheckoutCom['data']['auth_code'] : "" ,
-                                        "processorResponseText" => $paymentCheckoutCom['data']['response_summary'] ? $paymentCheckoutCom['data']['response_summary'] : "",
-                                        "avsStreetResult" => '',
-                                        "avsZipResult" => '',
-                                        "avsFullResult" => $paymentCheckoutCom['data']['source']['avs_check'] ? $paymentCheckoutCom['data']['source']['avs_check'] : ""
-                                      ],
-                                      "paymentGatewayData" => [
-                                        "gatewayName" => $paymentCheckoutCom['data']['metadata']['methodId'] ? $paymentCheckoutCom['data']['metadata']['methodId'] : "",
-                                        "gatewayTransactionId" => $paymentCheckoutCom['data']['processing']['acquirer_transaction_id'] ? $paymentCheckoutCom['data']['processing']['acquirer_transaction_id'] : ""
-                                      ],
-                                      "fullResponsePayload" => $paymentCheckoutCom ? $paymentCheckoutCom : "",
-                                      "expirationMonth" => strlen($expiryMonth) == 1 ? '0' . $expiryMonth : $expiryMonth,
-                                      "expirationYear" => strval($paymentCheckoutCom['data']['source']['expiry_year']),
-                                      "lastFourDigits" => $paymentCheckoutCom['data']['source']['last_4']
-                                    ];
+            if (isset($paymentCheckoutCom['data']['source']['name'])) {
+                $result['payment'][0]['creditCard']['nameOnCard'] = $paymentCheckoutCom['data']['source']['name'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['scheme'])) {
+                $result['payment'][0]['creditCard']['cardBrand'] = $paymentCheckoutCom['data']['source']['scheme'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['bin'])) {
+                $result['payment'][0]['creditCard']['bin'] = $paymentCheckoutCom['data']['source']['bin'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['issuer_country'])) {
+                $result['payment'][0]['creditCard']['countryOfIssuance'] = $paymentCheckoutCom['data']['source']['issuer_country'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['issuer'])) {
+                $result['payment'][0]['creditCard']['cardBank'] = $paymentCheckoutCom['data']['source']['issuer'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['cvv_check'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['cvvResult'] = $paymentCheckoutCom['data']['source']['cvv_check'];
+            }
+            if (isset($paymentCheckoutCom['data']['auth_code'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['authorizationCode'] = $paymentCheckoutCom['data']['auth_code'];
+            }
+            if (isset($paymentCheckoutCom['data']['response_code'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['processorResponseCode'] = $paymentCheckoutCom['data']['response_code'];
+            }
+            if (isset($paymentCheckoutCom['data']['response_summary'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['processorResponseText'] = $paymentCheckoutCom['data']['response_summary'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['avs_check'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['avsFullResult'] = $paymentCheckoutCom['data']['source']['avs_check'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['avs_check'])) {
+                $result['payment'][0]['creditCard']['verificationResults']['avsFullResult'] = $paymentCheckoutCom['data']['source']['avs_check'];
+            }
+            if (isset($paymentCheckoutCom['data']['metadata']['methodId'])) {
+                $result['payment'][0]['creditCard']['paymentGatewayData']['gatewayName'] = $paymentCheckoutCom['data']['metadata']['methodId'];
+            }
+            if (isset($paymentCheckoutCom['data']['processing']['acquirer_transaction_id'])) {
+                $result['payment'][0]['creditCard']['paymentGatewayData']['gatewayTransactionId'] = $paymentCheckoutCom['data']['processing']['acquirer_transaction_id'];
+            }
+            if (isset($paymentCheckoutCom['data']['source']['expiry_month'])) {
+                $expiryMonth = strval($paymentCheckoutCom['data']['source']['expiry_month']);
+                $result['payment'][0]['creditCard']['expirationMonth'] = strlen($expiryMonth) == 1 ? '0' . $expiryMonth : $expiryMonth;
+            }
+            if (isset($paymentCheckoutCom['data']['source']['expiry_year'])) {
+                $result['payment'][0]['creditCard']['expirationYear'] = strval($paymentCheckoutCom['data']['source']['expiry_year']);
+            }
+            if (isset($paymentCheckoutCom['data']['source']['last_4'])) {
+                $result['payment'][0]['creditCard']['lastFourDigits'] = $paymentCheckoutCom['data']['source']['last_4'];
+            }
+            if ($paymentCheckoutCom) {
+              $result['payment'][0]['creditCard']['fullPaypalResponsePayload'] = $paymentCheckoutCom;
+            }
 
             return $result;
         } catch (Exception $e) {
