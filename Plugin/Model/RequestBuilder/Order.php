@@ -116,7 +116,7 @@ class Order
                 $result['payment'][0]['creditCard']['lastFourDigits'] = $paymentCheckoutCom['data']['source']['last_4'];
             }
             if ($paymentCheckoutCom) {
-              $result['payment'][0]['creditCard']['fullPaypalResponsePayload'] = $paymentCheckoutCom;
+              $result['payment'][0]['creditCard']['fullResponsePayload'] = $paymentCheckoutCom;
             }
 
             return $result;
